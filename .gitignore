@@ -361,3 +361,7 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/BookStoreApp.API/logs/log-20221205.txt
+/BookStoreApp.API/logs/log-20221205.txt
+/BookStoreApp.API/logs/log-20221205.txt
+/.gitignore
