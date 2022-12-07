@@ -1,4 +1,4 @@
-global using  Microsoft.EntityFrameworkCore;
+﻿global using  Microsoft.EntityFrameworkCore;
 global using BookStoreApp.API.Data;
 
 using Serilog;

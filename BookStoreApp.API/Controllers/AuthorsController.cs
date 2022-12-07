@@ -5,21 +5,20 @@ using BookStoreApp.API.Models;
 using BookStoreApp.API.Statics;
 using Microsoft.AspNetCore.Mvc;
 
-
 namespace BookStoreApp.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class AuthorsController : ControllerBase
     {
-        private readonly BookStoreDbContext _context;
+        private readonly BookStoreDbContext context;
 
         private readonly ILogger<AuthorsController> logger;
         private readonly IMapper mapper;
 
         public AuthorsController(BookStoreDbContext context, ILogger<AuthorsController> logger, IMapper mapper)
         {
-            _context = context;
+            this.context = context;
             this.logger = logger;
             this.mapper = mapper;
         }
@@ -30,12 +29,12 @@ namespace BookStoreApp.API.Controllers
         {
             try
             {
-                if (_context.Authors == null)
+                if (context.Authors == null)
                 {
                     logger.LogWarning("Entity set for 'BookStoreDbContext.Authors' is null.");
                     return Problem("Entity set for DbContext is null.");
                 }
-                var authors = await _context.Authors.ToListAsync();
+                var authors = await context.Authors.ToListAsync();
                 var authorDtos = mapper.Map<IEnumerable<AuthorDto>>(authors);
                 return Ok(authorDtos);
             }
@@ -51,7 +50,7 @@ namespace BookStoreApp.API.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<AuthorDto>> GetAuthor(int id)
         {
-            if (_context.Authors == null)
+            if (context.Authors == null)
             {
                 logger.LogWarning("Entity set for 'BookStoreDbContext.Authors' is null.");
                 return Problem("Entity set for DbContext is null.");
@@ -59,7 +58,7 @@ namespace BookStoreApp.API.Controllers
             try
             {
 
-                var author = await _context.Authors.FindAsync(id);
+                var author = await context.Authors.FindAsync(id);
 
                 if (author == null)
                 {                    
@@ -85,12 +84,14 @@ namespace BookStoreApp.API.Controllers
                 logger.LogWarning($"Record was not matched in {nameof(PutAuthor)} id {id} and {authorDto}");
                 return BadRequest("Something is wrong! check your input data.");
             }
-            var author = await _context.Authors.FindAsync(id);
-            _context.Entry(author).State = EntityState.Modified;
+            var author = await context.Authors.FindAsync(id);
+
+            mapper.Map(authorDto, author);
+            context.Entry(author).State = EntityState.Modified;
 
             try
             {
-                await _context.SaveChangesAsync();
+                await context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException ex)
             {
@@ -114,17 +115,17 @@ namespace BookStoreApp.API.Controllers
         [HttpPost]
         public async Task<ActionResult<AuthorCreateDto>> PostAuthor(AuthorCreateDto authorCreateDto)
         {
-            if (_context.Authors == null)
+            if (context.Authors == null)
             {
                 logger.LogWarning("Entity set for 'BookStoreDbContext.Authors' is null.");
                 return Problem("Entity set for DbContext is null.");
             }
             var author = mapper.Map<Author>(authorCreateDto);
 
-            _context.Authors.Add(author);
+            context.Authors.Add(author);
             try
             {
-                await _context.SaveChangesAsync();
+                await context.SaveChangesAsync();
             }
             catch (Exception ex)
             {
@@ -140,22 +141,22 @@ namespace BookStoreApp.API.Controllers
         public async Task<IActionResult> DeleteAuthor(int id)
         {
 
-            if (_context.Authors == null)
+            if (context.Authors == null)
             {
                 logger.LogWarning("Entity set for 'BookStoreDbContext.Authors' is null.");
                 return Problem("Entity set for DbContext is null.");
             }
             try
             {
-                var author = await _context.Authors.FindAsync(id);
+                var author = await context.Authors.FindAsync(id);
                 if (author == null)
                 {
                     logger.LogWarning($"Record was not found in {nameof(DeleteAuthor)} id {id}");
                     return NotFound("This Id doesn't match any Author!");
                 }
 
-                _context.Authors.Remove(author);
-                await _context.SaveChangesAsync();
+                context.Authors.Remove(author);
+                await context.SaveChangesAsync();
             }
             catch (Exception ex)
             {
@@ -167,7 +168,7 @@ namespace BookStoreApp.API.Controllers
 
         private bool AuthorExists(int id)
         {
-            return (_context.Authors?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (context.Authors?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }
