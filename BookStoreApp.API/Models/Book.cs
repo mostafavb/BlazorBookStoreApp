@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace BookStoreApp.API.Models;
+﻿namespace BookStoreApp.API.Models;
 
 public partial class Book
 {
@@ -20,4 +17,6 @@ public partial class Book
     public decimal? Price { get; set; }
 
     public int? AuthorId { get; set; }
+
+    public virtual Author? Author { get; set; }
 }

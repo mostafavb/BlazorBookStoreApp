@@ -16,7 +16,7 @@ BlazorFluentUI => UI for blazor
 
 Compression => Compress the data from server in data layer
 
-
+Seq panel: http://localhost:5341/
 
 Scaffold-DbContext 'Server=(localdb)\MSSQLLocalDB;Database=BookStoreDB' Microsoft.EntityFrameworkCore.SqlServer -ContextDir Data -OutputDir Models
 or
