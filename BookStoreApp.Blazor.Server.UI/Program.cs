@@ -1,5 +1,6 @@
 global using BookStoreApp.Blazor.Server.UI.Services.Base;
 using Blazored.LocalStorage;
+using Blazored.Toast;
 using BookStoreApp.Blazor.Server.UI.Services.Authore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,6 +10,7 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 
 builder.Services.AddBlazoredLocalStorage();
+builder.Services.AddBlazoredToast();
 
 builder.Services.AddHttpClient<IClient, Client>(cl => cl.BaseAddress = new Uri("https://localhost:7036"));
 

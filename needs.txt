@@ -10,7 +10,7 @@ Moq  => Testing
 
 Toolbelt.Blazor.LoadingBar  => Loading bar for blazor
 
-Blazored/LocalStorage  => Local storage for blazor
+Blazored.LocalStorage  => Local storage for blazor
 
 BlazorFluentUI => UI for blazor
 
@@ -21,3 +21,6 @@ Seq panel: http://localhost:5341/
 Scaffold-DbContext 'Server=(localdb)\MSSQLLocalDB;Database=BookStoreDB' Microsoft.EntityFrameworkCore.SqlServer -ContextDir Data -OutputDir Models
 or
 dotnet ef dbcontext scaffold Name=ConnectionStrings:BookStoreAppDbConnection Microsoft.EntityFrameworkCore.SqlServer --context-dir Data --output-dir Models --table Books
+
+
+Blazored.Toast => for showing alerts

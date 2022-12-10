@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace BookStoreApp.API.Controllers
 {
     [Route("api/[controller]")]
+    [ApiConventionType(typeof(DefaultApiConventions))]
     [ApiController]
     public class AuthorsController : ControllerBase
     {
