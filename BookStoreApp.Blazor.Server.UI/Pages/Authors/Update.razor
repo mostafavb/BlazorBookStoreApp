@@ -38,22 +38,23 @@ else
                 </div>
                 <br />
                 <div class="form-group">
-                    <button class="btn btn-primary form-control-sm" type="button" @onclick="HandleEditAuthor">
+                    <button class="btn btn-primary form-control-sm" type="submit">
                         <span class="oi oi-bookmark"></span>
                         Save Author
                     </button>
                 </div>
-                <br />
-                <div class="form-group">
-                    <button @onclick="BackToList" class="btn btn-info form-control-sm" type="button">
-                        <span class="oi oi-media-skip-backward"></span>
-                        Back to list
-                    </button>
-                </div>
+               
             </div>
         </EditForm>
     }
 }
+<br />
+<div class="form-group">
+    <button @onclick="BackToList" class="btn btn-info form-control-sm" type="button">
+        <span class="oi oi-media-skip-backward"></span>
+        Back to list
+    </button>
+</div>
 @code {
 
 }

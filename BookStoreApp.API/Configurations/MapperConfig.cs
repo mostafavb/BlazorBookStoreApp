@@ -11,6 +11,7 @@ public class MapperConfig : Profile
     {
         CreateMap<AuthorCreateDto, Author>().ReverseMap();
         CreateMap<AuthorDto, Author>().ReverseMap();
+        CreateMap<AuthorDetailsDto, Author>().ReverseMap();
 
         CreateMap<BookCreateDto, Book>().ReverseMap();
         CreateMap<BookUpdateDto, Book>().ReverseMap();

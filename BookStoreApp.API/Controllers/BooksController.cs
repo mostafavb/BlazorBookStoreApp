@@ -1,20 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using BookStoreApp.API.Data;
-using BookStoreApp.API.Models;
-using AutoMapper;
-using BookStoreApp.API.Dtos.Book;
-using BookStoreApp.API.Statics;
+﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using BookStoreApp.API.Dtos.Book;
+using BookStoreApp.API.Models;
+using BookStoreApp.API.Statics;
+using Microsoft.AspNetCore.Mvc;
 
 namespace BookStoreApp.API.Controllers
 {
     [Route("api/[controller]")]
+    [ApiConventionType(typeof(DefaultApiConventions))]
     [ApiController]
     public class BooksController : ControllerBase
     {

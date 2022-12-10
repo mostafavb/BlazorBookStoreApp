@@ -1,5 +1,6 @@
 ﻿
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using BookStoreApp.API.Dtos.Author;
 using BookStoreApp.API.Models;
 using BookStoreApp.API.Statics;
@@ -62,11 +63,42 @@ namespace BookStoreApp.API.Controllers
                 var author = await context.Authors.FindAsync(id);
 
                 if (author == null)
-                {                    
+                {
                     return NotFound("This Id doesn't match any Author!");
                 }
                 var authorDto = mapper.Map<AuthorDto>(author);
                 return Ok(authorDto);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, $"Error happend in {nameof(GetAuthor)} id {id}");
+                return Problem(Messages.Error500, statusCode: 500);
+            }
+        }
+
+        // GET: api/Authors/authordetail/5
+        [HttpGet("AuthorDetails/{id}")]
+        public async Task<ActionResult<AuthorDetailsDto>> GetAuthorDetail(int id)
+        {
+            if (context.Authors == null)
+            {
+                logger.LogWarning("Entity set for 'BookStoreDbContext.Authors' is null.");
+                return Problem("Entity set for DbContext is null.");
+            }
+            try
+            {
+
+                var author = await context.Authors
+                    .Include(i => i.Books)
+                    .ProjectTo<AuthorDetailsDto>(mapper.ConfigurationProvider)
+                    .FirstOrDefaultAsync(f => f.Id == id);
+
+                if (author == null)
+                {
+                    return NotFound("This Id doesn't match any Author!");
+                }
+
+                return Ok(author);
             }
             catch (Exception ex)
             {
@@ -139,6 +171,10 @@ namespace BookStoreApp.API.Controllers
 
         // DELETE: api/Authors/5
         [HttpDelete("{id}")]
+        [ProducesDefaultResponseType]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> DeleteAuthor(int id)
         {
 

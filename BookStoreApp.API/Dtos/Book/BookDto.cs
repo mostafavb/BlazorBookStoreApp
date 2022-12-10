@@ -8,6 +8,8 @@ public class BookDto : BaseDto
 
     public decimal? Price { get; set; }
 
+    public string Summary { get; set; }
+
     public int? AuthorId { get; set; }
     public string? AuthorName { get; set;}
 }

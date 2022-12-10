@@ -117,4 +117,58 @@ public class AuthorService : BaseHttpService, IAuthorService
         }
         return response;
     }
+
+    public async Task<Response<AuthorDetailsDto>> GetAuthorDetails(int id)
+    {
+        Response<AuthorDetailsDto> response;
+        try
+        {
+            //await Task.Delay(2000);
+            //throw new Exception("Its a big error please call your administrator.");
+            var data = await client.AuthorDetailsAsync(id);
+            response = new Response<AuthorDetailsDto>()
+            {
+                Data = data,
+                Success = true
+            };
+        }
+        catch (ApiException ex)
+        {
+            response = ConvertApiException<AuthorDetailsDto>(ex);
+        }
+        catch (Exception ex)
+        {
+            response = new Response<AuthorDetailsDto>()
+            {
+                Message = ex.Message,
+            };
+        }
+        return response;
+    }
+
+    public async Task<Response<int>> DeleteAuthor(int id)
+    {
+        Response<int> response;
+        try
+        {
+            await client.AuthorsDELETEAsync(id);
+            response = new()
+            {
+                Success = true
+            };
+        }
+        catch (ApiException ex)
+        {
+            response = ConvertApiException<int>(ex);
+        }
+        catch (Exception ex)
+        {
+
+            response = new()
+            {
+                Message = ex.Message,
+            };
+        }
+        return response;
+    }
 }

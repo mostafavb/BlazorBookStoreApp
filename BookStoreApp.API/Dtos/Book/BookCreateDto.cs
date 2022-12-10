@@ -16,7 +16,7 @@ public class BookCreateDto
     public string Isbn { get; set; } = null!;
 
     [Required]
-    [StringLength(50,MinimumLength =10)]
+    [StringLength(500,MinimumLength =10)]
     public string? Summary { get; set; } = string.Empty;
 
     public string? Image { get; set; } = string.Empty;
