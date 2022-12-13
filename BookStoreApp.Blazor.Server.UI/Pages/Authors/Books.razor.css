@@ -1,0 +1,14 @@
+﻿::deep .card-min-height {
+    min-height: 500px;
+}
+::deep .card-img-height {
+    max-width: 200px;
+    max-height: 250px;
+}
+::deep .img-center {
+   
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    text-align:center;
+}

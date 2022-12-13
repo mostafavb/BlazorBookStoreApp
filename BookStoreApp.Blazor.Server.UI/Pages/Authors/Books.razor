@@ -2,7 +2,7 @@
 <h3>Books</h3>
 @if (response == null)
 {
-     <MudAlert Severity="Severity.Info">Loading data, please wait...</MudAlert>
+    <MudAlert Severity="Severity.Info">Loading data, please wait...</MudAlert>
 }
 else if (!response.Success)
 {
@@ -10,25 +10,27 @@ else if (!response.Success)
 }
 else
 {
-    <MudGrid Spacing="1" Justify="Justify.FlexStart">
-        @foreach (var book in response.Data)
-        {
-            <MudItem xs="12" sm="6" md="4" lg="3">
-                <MudCard Class="align-center justify-center mud-width-full py-8" Style="min-height:550px;">
-                    <MudCardMedia Image="@book.Image" Style="max-width:200px;max-height:250px;" />
-                    <MudCardContent>
-                        <MudText Typo="Typo.h5">@book.Title - @book.Price?.ToString("C")</MudText>
-                        <MudText Typo="Typo.body2">@book.Summary</MudText>
-                    </MudCardContent>
-                    <MudCardActions>
-                        <MudIconButton Icon="@Icons.Material.Filled.Favorite" Color="Color.Default" />
-                        <MudIconButton Icon="@Icons.Material.Filled.Share" Color="Color.Default" />
-                        <MudButton Variant="Variant.Text" Color="Color.Primary">Learn More</MudButton>
-                    </MudCardActions>
-                </MudCard>
-            </MudItem>            
-        }
-    </MudGrid>
+    <div>
+        <MudGrid Spacing="1" Justify="Justify.Center">
+            @foreach (var book in response.Data)
+            {
+                <MudItem xs="12" sm="6" md="4" lg="3">
+                    <MudCard Class="card-min-height">
+                        <MudCardMedia Image="@book.Image" Class="card-img-height img-center" />
+                        <MudCardContent>
+                            <MudText Typo="Typo.h5">@book.Title - @book.Price?.ToString("C")</MudText>
+                            <MudText Typo="Typo.body2">@book.Summary</MudText>
+                        </MudCardContent>
+                        <MudCardActions>
+                            <MudIconButton Icon="@Icons.Material.Filled.Favorite" Color="Color.Default" />
+                            <MudIconButton Icon="@Icons.Material.Filled.Share" Color="Color.Default" />
+                            <MudButton Variant="Variant.Text" Color="Color.Primary">Learn More</MudButton>
+                        </MudCardActions>
+                    </MudCard>
+                </MudItem>
+            }
+        </MudGrid>
+    </div>
 }
 
 @code {

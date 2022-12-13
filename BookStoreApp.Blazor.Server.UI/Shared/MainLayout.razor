@@ -1,8 +1,8 @@
 ﻿@inherits LayoutComponentBase
 
 <MudThemeProvider IsDarkMode="@isDarkMode" />
-<MudDialogProvider  />
-<MudSnackbarProvider  />
+<MudDialogProvider />
+<MudSnackbarProvider />
 
 <MudLayout>
     <MudAppBar Elevation="0">
@@ -10,9 +10,9 @@
         <MudSpacer />
         <MudIconButton Icon="@Icons.Custom.Brands.MudBlazor" Color="Color.Inherit" Link="https://mudblazor.com/" Target="_blank" />
         <MudIconButton Icon="@Icons.Custom.Brands.GitHub" Color="Color.Inherit" Link="https://github.com/MudBlazor/MudBlazor/" Target="_blank" />
-        <MudIconButton Icon="@Icons.Custom.Uncategorized.WaterMelon" Color="Color.Inherit" OnClick="ChangeDarkMode" />
+        <MudSwitch @bind-Checked="@isDarkMode" Color="Color.Info" ThumbIcon="@(isDarkMode==false? Icons.Filled.ShieldMoon : Icons.Filled.WbSunny)" />
     </MudAppBar>
-    <MudDrawer @bind-Open="_drawerOpen" Elevation="1">       
+    <MudDrawer @bind-Open="_drawerOpen" Elevation="1">
         <NavMenu />
     </MudDrawer>
     <MudMainContent>
