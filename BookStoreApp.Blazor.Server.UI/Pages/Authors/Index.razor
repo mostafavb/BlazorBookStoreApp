@@ -1,0 +1,57 @@
+﻿@page "/authors/"
+
+@if (response == null)
+{
+    <MudAlert Severity="Severity.Info">
+        <MudProgressCircular Size="Size.Small" Color="Color.Default" Indeterminate="true" />
+        Loading data, please wait...
+    </MudAlert>
+}
+else if (!response.Success)
+{
+    <MudAlert Severity="Severity.Error">@response.Message</MudAlert>
+}
+else
+{
+
+    <MudButton Href="/authors/create" Variant="Variant.Filled"
+           EndIcon="@Icons.Filled.Add"
+           Color="Color.Surface"
+           Style="text-transform:none">
+        New Author
+    </MudButton>
+    <MudTable Elevation="25" Virtualize="true" Dense="true" SortLabel="Sort By" RowsPerPage="10" Items="@response.Data" Filter="new Func<AuthorDto, bool>(Search)" @bind-author="author" Style="margin-top:10px;">
+        <ToolBarContent>
+            <MudText Typo="Typo.h6">Authors</MudText>
+            <MudSpacer />
+            <MudTextField @bind-Value="searchString" Placeholder="Search for author..." Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh><MudTableSortLabel SortBy="new Func<AuthorDto, object>(x=>x.FirstName)">First Name</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<AuthorDto, object>(x=>x.LastName)">Last Name</MudTableSortLabel></MudTh>
+            <MudTh>Action</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="FirstName">
+                @context.FirstName
+            </MudTd>
+            <MudTd DataLabel="LastName">
+                @context.LastName
+            </MudTd>
+            <MudTd DataLabel="">
+                <MudFab Icon="@Icons.Material.Filled.GridView" Size="Size.Small" IconSize="Size.Small" DisableElevation="true" @onclick=@(()=>navigationManager.NavigateTo($"/authors/detail/{context.Id}"))></MudFab>
+                <MudFab Icon="@Icons.Material.Filled.Edit" Size="Size.Small" IconSize="Size.Small" DisableElevation="true" @onclick=@(()=>navigationManager.NavigateTo($"/authors/edit/{context.Id}"))></MudFab>
+                <MudFab Icon="@Icons.Material.Filled.Delete" Size="Size.Small" IconSize="Size.Small" DisableElevation="true" @onclick=@(()=>Delete(@context.Id))></MudFab>
+
+            </MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager />
+        </PagerContent>
+    </MudTable>
+}
+
+
+@code {
+
+}

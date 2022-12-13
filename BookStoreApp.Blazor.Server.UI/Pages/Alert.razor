@@ -1,0 +1,51 @@
+﻿@page "/alert"
+@*@inject IToastService toastService*@
+<h3>Bootstrap Alert Example</h3>
+
+<div>
+    <button @onclick="@DoSomthing">Show/Hide</button>
+</div>
+
+<div class="alert alert-primary @HideAlert fade-in" role="alert">
+    @AlertContent
+</div>
+<button class="btn btn-success" @onclick="ShowSuccess">Show Success</button>
+<button class="btn btn-danger" @onclick="ShowError">Show Error</button>
+<button class="btn btn-info" @onclick="ShowInfo">Show Info</button>
+<button class="btn btn-warning" @onclick="ShowWarning">Show Warning</button>
+
+@code {
+    private string HideAlert { get; set; } = "d-none";
+    private string AlertContent { get; set; } = "This is a primary alert—check it out!";
+    private void DoSomthing()
+    {
+        if (HideAlert == "")
+        {
+            HideAlert = "d-none";
+            AlertContent = "This is a primary alert—check it out!";
+        }
+        else
+        {
+            HideAlert = "";
+            AlertContent = "Hello World";
+        }
+    }
+
+    private void ShowSuccess()
+    {
+        //toastService.ShowSuccess("This is Success message with title", "SUCCESS");
+    }
+    private void ShowError()
+    {
+        //toastService.ShowError("This is Error message with title", "ERROR");
+    }
+
+    private void ShowInfo()
+    {
+        //toastService.ShowInfo("This is Info message with title", "INFO");
+    }
+    private void ShowWarning()
+    {
+        //toastService.ShowWarning("This is Warning message with title", "WARNING");
+    }
+}
