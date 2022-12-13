@@ -1,79 +1,45 @@
 ﻿@page "/authors/detail/{id:int}"
 
-<h3>Details of Author</h3>
 @if (response == null)
 {
-    <div class="alert alert-primary" role="alert">
+    <MudAlert Severity="Severity.Info">
+        <MudProgressCircular Size="Size.Small" Color="Color.Default" Indeterminate="true" />
         Loading data, please wait...
-    </div>
+    </MudAlert>   
 }
 else
 {
     if (!response.Success)
     {
-        <div class="alert alert-danger" role="alert">
-            @response.Message
-        </div>
+        <MudAlert Severity="Severity.Error">@response.Message</MudAlert>
     }
     else
     {
-        <EditForm Model="Author">
-            <fieldset disabled="true">
-                <div class="row-cols-lg-3">
-                    <div class="form-group">
-                        <label for="firstname">First Name</label>
-                        <InputText @bind-Value="Author.FirstName" class="form-control" id="firstname" />
-                        <ValidationMessage For="@(()=>Author.FirstName)" />
-                    </div>
-                    <div class="form-group">
-                        <label for="lastname">Last Name</label>
-                        <InputText @bind-Value="Author.LastName" class="form-control" id="lastname" />
-                        <ValidationMessage For="@(()=>Author.LastName)" />
-                    </div>
-                    <div class="form-group">
-                        <label for="bio">Bio</label>
-                        <InputTextArea @bind-Value="Author.Bio" class="form-control" id="bio" />
-                        <ValidationMessage For="@(()=>Author.Bio)" />
-                    </div>
-                </div>
-            </fieldset>
-            <br />
-            @if (Author.Books == null || !Author.Books.Any())
-            {
-                <div class="alert alert-secondary alert-dismissible" role="alert">
-                    No books for this author.
-                </div>
-            }
-            else
-            {
-                <div class="row">
-                    @foreach (var book in Author.Books)
-                    {
-                        <div class="card" style="width:18rem;margin-right:5px;">
-                            <img src="@book.Image" />
-                            <div class="card-body">
-                                <h6 class="card-title"><strong>@book.Title - @book.Price?.ToString("C")</strong></h6>
-                                <p style="font-size:small;" class="card-text">@book.Summary</p>
-                                <a href="#" class="btn btn-link">View Book</a>
-                            </div>
-                        </div>                        
-                    }
-                </div>
-            }
-            <br />
-            <div class="form-group">
-                <button @onclick="GotToEdit" class="btn btn-link form-control-sm" type="button">
-                    <span class="oi oi-pencil"></span>
-                    Edit the Author
-                </button>
-            </div>
-        </EditForm>
+        <MudCard Elevation="25">
+            <MudCardHeader>
+                <CardHeaderContent>
+                    <MudText Typo="Typo.h6">Details of Author</MudText>
+                </CardHeaderContent>
+            </MudCardHeader>
+            <MudCardContent>
+                <MudTextField Disabled="true" @bind-Value="Author.FirstName" Label="First Name" Variant="Variant.Text" Margin="Margin.Normal"></MudTextField>
+                <MudTextField Disabled="true" @bind-Value="Author.LastName" Label="Last Name" Variant="Variant.Text" Margin="Margin.Normal"></MudTextField>
+                <MudTextField Lines="4" Disabled="true" @bind-Value="Author.Bio" Label="Bio" Variant="Variant.Text" Margin="Margin.Normal"></MudTextField>
+                <br />
+                @if (Author.Books == null || !Author.Books.Any())
+                {
+                    <MudAlert Severity="Severity.Normal">No book was found for this author.</MudAlert>
+                }
+                else
+                {
+                    <Books AuthorId="@Author.Id"/>
+                }
+            </MudCardContent>
+        </MudCard>
+       
     }
 }
 <br />
-<div class="form-group">
-    <button @onclick="BackToList" class="btn btn-info form-control-sm" type="button">
-        <span class="oi oi-media-skip-backward"></span>
-        Back to list
-    </button>
-</div>
+<MudButton Variant="Variant.Filled" Color="Color.Success" OnClick="GotToEdit">Edit Author</MudButton>
+<MudButton Variant="Variant.Filled" Color="Color.Surface" OnClick="BackToList">Back to list</MudButton>
+

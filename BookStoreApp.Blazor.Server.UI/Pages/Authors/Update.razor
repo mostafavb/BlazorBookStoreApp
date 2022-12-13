@@ -2,59 +2,38 @@
 
 @if (response == null)
 {
-    <div class="alert alert-primary" role="alert">
+    <MudAlert Severity="Severity.Info">
+        <MudProgressCircular Size="Size.Small" Color="Color.Default" Indeterminate="true" />
         Loading data, please wait...
-    </div>
+    </MudAlert>
 }
 else
 {
     if (!response.Success)
     {
-        <div class="alert alert-danger" role="alert">
-            @response.Message
-        </div>
+        <MudAlert Severity="Severity.Error">@response.Message</MudAlert>
     }
     else
     {
-        <h3>Edit current Author</h3>
-        <EditForm Model="Author" OnValidSubmit="HandleEditAuthor">
-            <DataAnnotationsValidator />
-            <ValidationSummary />
-            <div class="row-cols-lg-3">
-                <div class="form-group">
-                    <label for="firstname">First Name</label>
-                    <InputText @bind-Value="Author.FirstName" class="form-control" id="firstname" />
-                    <ValidationMessage For="@(()=>Author.FirstName)" />
-                </div>
-                <div class="form-group">
-                    <label for="lastname">Last Name</label>
-                    <InputText @bind-Value="Author.LastName" class="form-control" id="lastname" />
-                    <ValidationMessage For="@(()=>Author.LastName)" />
-                </div>
-                <div class="form-group">
-                    <label for="bio">Bio</label>
-                    <InputTextArea @bind-Value="Author.Bio" class="form-control" id="bio" />
-                    <ValidationMessage For="@(()=>Author.Bio)" />
-                </div>
+        <MudCard Elevation="25">
+            <MudCardHeader>
+                <CardHeaderContent>
+                    <MudText Typo="Typo.h6">Edit Author</MudText>
+                </CardHeaderContent>
+            </MudCardHeader>
+            <MudCardContent>
+                <MudTextField @bind-Value="Author.FirstName" Label="First Name" Variant="Variant.Text" Margin="Margin.Normal"></MudTextField>
+                <MudTextField @bind-Value="Author.LastName" Label="Last Name" Variant="Variant.Text" Margin="Margin.Normal"></MudTextField>
+                <MudTextField Lines="4" @bind-Value="Author.Bio" Label="Bio" Variant="Variant.Text" Margin="Margin.Normal"></MudTextField>
                 <br />
-                <div class="form-group">
-                    <button class="btn btn-primary form-control-sm" type="submit">
-                        <span class="oi oi-bookmark"></span>
-                        Save Author
-                    </button>
-                </div>
-               
-            </div>
-        </EditForm>
+                <MudButton Variant="Variant.Filled" Color="Color.Success" OnClick="HandleEditAuthor">Save Author</MudButton>
+            </MudCardContent>
+        </MudCard>
     }
 }
 <br />
-<div class="form-group">
-    <button @onclick="BackToList" class="btn btn-info form-control-sm" type="button">
-        <span class="oi oi-media-skip-backward"></span>
-        Back to list
-    </button>
-</div>
+<MudButton Variant="Variant.Filled" Color="Color.Surface" OnClick="BackToList">Back to list</MudButton>
+
 @code {
 
 }

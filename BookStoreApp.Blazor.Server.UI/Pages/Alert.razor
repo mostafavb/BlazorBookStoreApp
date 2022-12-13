@@ -1,5 +1,5 @@
 ﻿@page "/alert"
-@inject IToastService toastService
+@*@inject IToastService toastService*@
 <h3>Bootstrap Alert Example</h3>
 
 <div>
@@ -33,19 +33,19 @@
 
     private void ShowSuccess()
     {
-        toastService.ShowSuccess("This is Success message with title", "SUCCESS");
+        //toastService.ShowSuccess("This is Success message with title", "SUCCESS");
     }
     private void ShowError()
     {
-        toastService.ShowError("This is Error message with title", "ERROR");
+        //toastService.ShowError("This is Error message with title", "ERROR");
     }
 
     private void ShowInfo()
     {
-        toastService.ShowInfo("This is Info message with title", "INFO");
+        //toastService.ShowInfo("This is Info message with title", "INFO");
     }
     private void ShowWarning()
     {
-        toastService.ShowWarning("This is Warning message with title", "WARNING");
+        //toastService.ShowWarning("This is Warning message with title", "WARNING");
     }
 }

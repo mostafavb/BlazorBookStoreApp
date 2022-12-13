@@ -6,7 +6,7 @@ public class AuthorService : BaseHttpService, IAuthorService
 {
     private readonly IClient client;
 
-    public AuthorService(IClient client, ILocalStorageService localStorage) : base(client, localStorage)
+    public AuthorService(IClient client) : base(client)
     {
         this.client = client;
     }
@@ -16,8 +16,6 @@ public class AuthorService : BaseHttpService, IAuthorService
         Response<int> response;
         try
         {
-            //throw new Exception("Wow there is a fatal error occured in system! Object String is null");
-
             await client.AuthorsPOSTAsync(author);
             response = new()
             {
@@ -43,6 +41,7 @@ public class AuthorService : BaseHttpService, IAuthorService
         Response<List<AuthorDto>> response;
         try
         {
+            //await Task.Delay(2000);
             var data = await client.AuthorsAllAsync();
             response = new Response<List<AuthorDto>>()
             {
@@ -64,7 +63,7 @@ public class AuthorService : BaseHttpService, IAuthorService
         return response;
     }
 
-    public async Task<Response<int>> EditAuthor(int id,AuthorDto author)
+    public async Task<Response<int>> EditAuthor(int id, AuthorDto author)
     {
         Response<int> response;
         try

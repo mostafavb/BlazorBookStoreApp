@@ -1,16 +1,18 @@
-﻿using Blazored.LocalStorage;
+﻿//using Blazored.LocalStorage;
 
 namespace BookStoreApp.Blazor.Server.UI.Services.Base;
 
 public class BaseHttpService
 {
     private readonly IClient client;
-    private readonly ILocalStorageService localStorage;
+    //private readonly ILocalStorageService localStorage;
 
-    public BaseHttpService(IClient client, ILocalStorageService localStorage)
+    public BaseHttpService(IClient client
+        //, ILocalStorageService localStorage
+        )
     {
         this.client = client;
-        this.localStorage = localStorage;
+        //this.localStorage = localStorage;
     }
 
     protected Response<Guid> ConvertApiException<Guid>(ApiException apiException)

@@ -36,6 +36,7 @@ namespace BookStoreApp.API.Controllers
                     logger.LogWarning("Entity set for 'BookStoreDbContext.Authors' is null.");
                     return Problem("Entity set for DbContext is null.");
                 }
+                await Task.Delay(1200);
                 var authors = await context.Authors.ToListAsync();
                 var authorDtos = mapper.Map<IEnumerable<AuthorDto>>(authors);
                 return Ok(authorDtos);
@@ -110,6 +111,10 @@ namespace BookStoreApp.API.Controllers
         // PUT: api/Authors/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
+        [ProducesDefaultResponseType]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> PutAuthor(int id, AuthorDto authorDto)
         {
             if (id != authorDto.Id)
@@ -146,6 +151,10 @@ namespace BookStoreApp.API.Controllers
         // POST: api/Authors
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+        [ProducesDefaultResponseType]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<AuthorCreateDto>> PostAuthor(AuthorCreateDto authorCreateDto)
         {
             if (context.Authors == null)

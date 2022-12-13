@@ -49,6 +49,33 @@ namespace BookStoreApp.API.Controllers
             }
         }
 
+        // GET: api/Books/BooksByAuthor/id
+        [HttpGet("BooksByAuthor/{authorId}")]
+        public async Task<ActionResult<IEnumerable<BookDto>>> GetBooksByAuthorId(int authorId)
+        {
+            if (context.Books == null)
+            {
+                logger.LogWarning("Entity set for 'BookStoreDbContext.Books' is null.");
+                return Problem("Entity set for DbContext is null.");
+            }
+            try
+            {
+                var books = await context.Books
+                    .Include(i => i.Author)
+                    .ProjectTo<BookDto>(mapper.ConfigurationProvider)
+                    .Where(w => w.AuthorId == authorId)
+                    .ToListAsync();
+                //var bookDtos = mapper.Map<IEnumerable<BookDto>>(books);
+                return Ok(books);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, $"Error happend in {nameof(GetBooks)}");
+                return Problem(Messages.Error500, statusCode: 500);
+            }
+        }
+
+
         // GET: api/Books/5
         [HttpGet("{id}")]
         public async Task<ActionResult<BookDto>> GetBook(int id)
@@ -83,6 +110,10 @@ namespace BookStoreApp.API.Controllers
         // PUT: api/Books/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
+        [ProducesDefaultResponseType]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> PutBook(int id, BookUpdateDto bookDto)
         {
             if (id != bookDto.Id)
@@ -121,6 +152,10 @@ namespace BookStoreApp.API.Controllers
         // POST: api/Books
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+        [ProducesDefaultResponseType]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<BookDto>> PostBook(BookCreateDto bookDto)
         {
             if (context.Books == null)
@@ -137,6 +172,10 @@ namespace BookStoreApp.API.Controllers
 
         // DELETE: api/Books/5
         [HttpDelete("{id}")]
+        [ProducesDefaultResponseType]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> DeleteBook(int id)
         {
             if (context.Books == null)

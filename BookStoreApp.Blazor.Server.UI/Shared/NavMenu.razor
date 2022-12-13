@@ -1,44 +1,28 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="">&Mu;&nabla;&beta; BookStore App</a>
-        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-    </div>
-</div>
+﻿
+<MudNavMenu Color="Color.Info">
+    <MudText Typo="Typo.h6" Class="px-4">&Mu;&nabla;&beta; BookStore App</MudText>
+    <MudText Typo="Typo.body2" Class="px-4 mud-text-secondary">An online shope</MudText>
+    <MudDivider Class="my-2" />
+    <MudNavLink Href="" Icon="@Icons.Filled.Home">Home</MudNavLink>
+    <MudNavLink Href="counter" Match="NavLinkMatch.Prefix" Icon="@Icons.Filled.Countertops">Counter</MudNavLink>
+    <MudNavLink Href="authors" Disabled="true">Billing</MudNavLink>
+    <MudNavGroup Title="Author" Expanded="true">
+        <MudNavLink Href="/authors" Icon="@Icons.Filled.People">All Authors</MudNavLink>
+        <MudNavLink Href="/authors/books/1" Icon="@Icons.Filled.BookOnline">Get Books</MudNavLink>
+    </MudNavGroup>
+    <MudNavLink Href="/about">About</MudNavLink>
+</MudNavMenu>
 
-<div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
-    <nav class="flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="oi oi-home" aria-hidden="true"></span> Home
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="counter">
-                <span class="oi oi-plus" aria-hidden="true"></span> Counter
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="authors/">
-                <span class="oi oi-person" aria-hidden="true"></span> Authors
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="alert/">
-                <span class="oi oi-person" aria-hidden="true"></span> Alert
-            </NavLink>
-        </div>
-    </nav>
-</div>
+
 
 @code {
     private bool collapseNavMenu = true;
 
-    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+    private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
 
     private void ToggleNavMenu()
     {
         collapseNavMenu = !collapseNavMenu;
     }
 }
+
