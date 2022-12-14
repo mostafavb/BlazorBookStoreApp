@@ -1420,7 +1420,7 @@ namespace BookStoreApp.Blazor.Server.UI.Services.Base
         public string Title { get; set; }
 
         [Newtonsoft.Json.JsonProperty("year", Required = Newtonsoft.Json.Required.Always)]
-        [System.ComponentModel.DataAnnotations.Range(1900, 2147483647)]
+        [System.ComponentModel.DataAnnotations.Range(1700, 2147483647)]
         public int Year { get; set; }
 
         [Newtonsoft.Json.JsonProperty("isbn", Required = Newtonsoft.Json.Required.Always)]
@@ -1432,12 +1432,19 @@ namespace BookStoreApp.Blazor.Server.UI.Services.Base
         [System.ComponentModel.DataAnnotations.StringLength(500, MinimumLength = 10)]
         public string Summary { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("image", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string Image { get; set; }
+        [Newtonsoft.Json.JsonProperty("imageData", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string ImageData { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("originalImageName", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string OriginalImageName { get; set; }
 
         [Newtonsoft.Json.JsonProperty("price", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Range(0D, 2147483647D)]
         public double Price { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("authorId", Required = Newtonsoft.Json.Required.Always)]
+        [System.ComponentModel.DataAnnotations.Range(1, 2147483647)]
+        public int AuthorId { get; set; }
 
     }
 

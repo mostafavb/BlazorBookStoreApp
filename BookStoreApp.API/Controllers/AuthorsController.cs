@@ -36,7 +36,7 @@ namespace BookStoreApp.API.Controllers
                     logger.LogWarning("Entity set for 'BookStoreDbContext.Authors' is null.");
                     return Problem("Entity set for DbContext is null.");
                 }
-                await Task.Delay(1200);
+                //await Task.Delay(1200);
                 var authors = await context.Authors.ToListAsync();
                 var authorDtos = mapper.Map<IEnumerable<AuthorDto>>(authors);
                 return Ok(authorDtos);

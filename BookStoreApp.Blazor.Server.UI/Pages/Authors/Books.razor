@@ -2,7 +2,10 @@
 <h3>Books</h3>
 @if (response == null)
 {
-    <MudAlert Severity="Severity.Info">Loading data, please wait...</MudAlert>
+    <MudAlert Severity="Severity.Info" NoIcon="true">
+        <MudProgressCircular Size="Size.Small" Color="Color.Default" Indeterminate="true" />
+        Loading data, please wait...
+    </MudAlert>
 }
 else if (!response.Success)
 {
@@ -11,7 +14,7 @@ else if (!response.Success)
 else
 {
     <div>
-        <MudGrid Spacing="1" Justify="Justify.Center">
+        <MudGrid Spacing="1" Justify="Justify.FlexStart">
             @foreach (var book in response.Data)
             {
                 <MudItem xs="12" sm="6" md="4" lg="3">

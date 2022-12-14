@@ -10,7 +10,7 @@
         <MudSpacer />
         <MudIconButton Icon="@Icons.Custom.Brands.MudBlazor" Color="Color.Inherit" Link="https://mudblazor.com/" Target="_blank" />
         <MudIconButton Icon="@Icons.Custom.Brands.GitHub" Color="Color.Inherit" Link="https://github.com/MudBlazor/MudBlazor/" Target="_blank" />
-        <MudSwitch @bind-Checked="@isDarkMode" Color="Color.Info" ThumbIcon="@(isDarkMode==false? Icons.Filled.ShieldMoon : Icons.Filled.WbSunny)" />
+        <MudSwitch @bind-Checked="@isDarkMode" Color="Color.Info" ThumbIcon="@(isDarkMode? Icons.Filled.WbSunny : Icons.Filled.ShieldMoon )" />
     </MudAppBar>
     <MudDrawer @bind-Open="_drawerOpen" Elevation="1">
         <NavMenu />

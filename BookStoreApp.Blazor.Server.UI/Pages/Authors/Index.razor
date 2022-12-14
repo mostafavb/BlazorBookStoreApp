@@ -2,7 +2,7 @@
 
 @if (response == null)
 {
-    <MudAlert Severity="Severity.Info">
+    <MudAlert Severity="Severity.Info" NoIcon="true">
         <MudProgressCircular Size="Size.Small" Color="Color.Default" Indeterminate="true" />
         Loading data, please wait...
     </MudAlert>
@@ -13,7 +13,6 @@ else if (!response.Success)
 }
 else
 {
-
     <MudButton Href="/authors/create" Variant="Variant.Filled"
            EndIcon="@Icons.Filled.Add"
            Color="Color.Surface"

@@ -4,6 +4,7 @@ using BookStoreApp.API.Dtos.Book;
 using BookStoreApp.API.Models;
 using BookStoreApp.API.Statics;
 using Microsoft.AspNetCore.Mvc;
+using System.Web;
 
 namespace BookStoreApp.API.Controllers
 {
@@ -16,12 +17,14 @@ namespace BookStoreApp.API.Controllers
 
         private readonly ILogger<BooksController> logger;
         private readonly IMapper mapper;
+        private readonly IWebHostEnvironment webHost;
 
-        public BooksController(BookStoreDbContext context, ILogger<BooksController> logger, IMapper mapper)
+        public BooksController(BookStoreDbContext context, ILogger<BooksController> logger, IMapper mapper, IWebHostEnvironment webHost)
         {
             this.context = context;
             this.logger = logger;
             this.mapper = mapper;
+            this.webHost = webHost;
         }
 
         // GET: api/Books
@@ -164,6 +167,7 @@ namespace BookStoreApp.API.Controllers
             }
 
             var book = mapper.Map<Book>(bookDto);
+            book.Image = CreateImage(bookDto.ImageData, bookDto.OriginalImageName);
             context.Books.Add(book);
             await context.SaveChangesAsync();
 
@@ -197,6 +201,33 @@ namespace BookStoreApp.API.Controllers
         private bool BookExists(int id)
         {
             return (context.Books?.Any(e => e.Id == id)).GetValueOrDefault();
+        }
+
+        private string CreateImage(string imagebase64, string imageName)
+        {
+            try
+            {
+                if (!string.IsNullOrEmpty(imagebase64))
+                {
+                    var url = HttpContext.Request.Host.Value;
+                    var ext = Path.GetExtension(imageName);
+                    var fileName = $"{Guid.NewGuid()}{ext}";
+                    var path = $"{webHost.WebRootPath}\\Files\\Images\\Books\\{fileName}";
+
+                    byte[] image = Convert.FromBase64String(imagebase64);
+
+                    var fileStream = System.IO.File.Create(path);
+                    fileStream.Write(image, 0, image.Length);
+                    fileStream.Close();
+
+                    return $"https://{url}/Files/Images/Books/{fileName}";
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, $"Error occured in creating image file for {imageName}.");
+            }
+            return string.Empty;
         }
     }
 }

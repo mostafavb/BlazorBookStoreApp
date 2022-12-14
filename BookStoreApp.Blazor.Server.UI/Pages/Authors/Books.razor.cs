@@ -1,4 +1,4 @@
-﻿using BookStoreApp.Blazor.Server.UI.Services.Books;
+﻿using BookStoreApp.Blazor.Server.UI.Services.Book;
 using Microsoft.AspNetCore.Components;
 
 namespace BookStoreApp.Blazor.Server.UI.Pages.Authors;
