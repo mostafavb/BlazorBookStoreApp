@@ -1,0 +1,44 @@
+﻿@page "/authors/detail/{id:int}"
+
+@if (response == null)
+{
+    <MudAlert Severity="Severity.Info">
+        <MudProgressCircular Size="Size.Small" Color="Color.Default" Indeterminate="true" />
+        Loading data, please wait...
+    </MudAlert>   
+}
+else
+{
+    if (!response.Success)
+    {
+        <MudAlert Severity="Severity.Error">@response.Message</MudAlert>
+    }
+    else
+    {
+        <MudCard Elevation="25">
+            <MudCardHeader>
+                <CardHeaderContent>
+                    <MudText Typo="Typo.h6">Details of Author</MudText>
+                </CardHeaderContent>
+            </MudCardHeader>
+            <MudCardContent>
+                <MudTextField Disabled="true" @bind-Value="Author.FirstName" Label="Author Name" Variant="Variant.Text" Margin="Margin.Normal"></MudTextField>
+                @*<MudTextField Disabled="true" @bind-Value="Author.LastName" Label="Last Name" Variant="Variant.Text" Margin="Margin.Normal"></MudTextField>*@
+                <MudTextField Lines="4" Disabled="true" @bind-Value="Author.Bio" Label="Bio" Variant="Variant.Text" Margin="Margin.Normal"></MudTextField>
+                <br />
+                @if (Author.Books == null || !Author.Books.Any())
+                {
+                    <MudAlert Severity="Severity.Normal">No book was found for this author.</MudAlert>
+                }
+                else
+                {
+                    <Books AuthorId="@Author.Id"/>
+                }
+            </MudCardContent>
+        </MudCard>       
+    }
+}
+<br />
+<MudButton Variant="Variant.Filled" Color="Color.Success" OnClick="GotToEdit">Edit Author</MudButton>
+<MudButton Variant="Variant.Filled" Color="Color.Surface" OnClick="BackToList">Back to list</MudButton>
+

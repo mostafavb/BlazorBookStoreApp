@@ -1,0 +1,111 @@
+﻿@page "/books/create"
+
+@if (result != null)
+{
+    if (result.Success)
+    {
+        <MudAlert Severity="Severity.Info">The book was fired up successfully</MudAlert>
+    }
+    else
+    {
+        <MudAlert Severity="Severity.Error"> @result.Message</MudAlert>
+    }
+}
+<MudCard Elevation="25">
+    <MudCardHeader>
+        <CardHeaderContent>
+            <MudText Typo="Typo.h6">Add New Book</MudText>
+        </CardHeaderContent>
+    </MudCardHeader>
+    <MudCardContent>
+        <EditForm OnValidSubmit="HandelCreatingBook" Model="model" Context="editFormContex">
+            <DataAnnotationsValidator />
+            <MudSelect Label="Author" @bind-Value="model.AuthorId"
+                       For="@(()=>model.AuthorId)"
+                       HelperText="Select an author" Text="-- Select an author --">
+                @if (authors != null)
+                {
+                    foreach (var author in authors)
+                    {
+                        <MudSelectItem Value="author.Id">
+                            @($"{author.FirstName} {author.LastName}"
+                        )
+                        </MudSelectItem>
+                    }
+                }
+            </MudSelect>
+            <MudTextField @bind-Value="model.Title" Label="Title"
+                          Variant="Variant.Text"
+                          For="@(()=>model.Title)"
+                          Margin="Margin.Normal">
+            </MudTextField>
+            <MudNumericField @bind-Value="model.Year" Label="Year"
+                             Variant="Variant.Text"
+                             For="@(()=>model.Year)">
+            </MudNumericField>
+            <MudTextField @bind-Value="model.Isbn" Label="ISBN"
+                          Variant="Variant.Text"
+                          For="@(()=>model.Isbn)"
+                          Margin="Margin.Normal">
+            </MudTextField>
+            <MudNumericField @bind-Value="model.Price" Label="Price"
+                             Variant="Variant.Text"
+                             Min="0.0"
+                             Culture="@_en"
+                             For="@(()=>model.Price)">
+            </MudNumericField>
+            <MudTextField @bind-Value="model.Summary" Label="Summary of book"
+                          Variant="Variant.Text"
+                          Lines="4"
+                          For="@(()=>model.Summary)"
+                          Margin="Margin.Normal">
+            </MudTextField>
+            <MudGrid>
+                <MudItem xs="12" sm="4" Class="my-3">
+                    @*<InputFile id="fileInput" OnChange="HandelFileSelection" hidden />*@
+                    <MudFileUpload T="IBrowserFile" OnFilesChanged="HandelFileSelection">
+                        <ButtonTemplate>
+                            <MudButton HtmlTag="label"
+                                       Variant="Variant.Filled"
+                                       Color="Color.Primary"
+                                       StartIcon="@Icons.Filled.CloudUpload"
+                                       for="@context">Select an image
+                                   </MudButton>
+                            <MudButton HtmlTag="label"
+                                       Variant="Variant.Filled"
+                                       Color="Color.Error"
+                                       StartIcon="@Icons.Filled.Delete"
+                                       OnClick="@ClearCash">
+                            </MudButton>
+                        </ButtonTemplate>
+                    </MudFileUpload>
+
+                </MudItem>
+                <MudItem xs="12" sm="8" Class="my-3">
+                    @if (!string.IsNullOrEmpty(img))
+                    {
+                        <MudImage Src="@img" Elevation="25" Alt="@model.Title" Height="180"></MudImage>
+                    }
+                </MudItem>
+                @if (!string.IsNullOrEmpty(uploadFileWarning))
+                {
+                    <MudAlert Severity="Severity.Error"> @uploadFileWarning</MudAlert>
+                }
+            </MudGrid>
+            @*            <MudTextField @bind-Value="model.Image" Label="Image Link"
+            Variant="Variant.Text"
+            For="@(()=>model.Image)"
+            Margin="Margin.Normal">
+            </MudTextField>*@
+
+            <br />
+            <MudButton Variant="Variant.Filled" Color="Color.Success" ButtonType="ButtonType.Submit">Save Book</MudButton>
+        </EditForm>
+
+    </MudCardContent>
+</MudCard>
+<MudButton Variant="Variant.Filled" Color="Color.Surface" OnClick="BackToList">Back to list</MudButton>
+
+@code {
+
+}

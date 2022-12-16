@@ -1,0 +1,42 @@
+﻿@page "/authors/books/{authorid:int}"
+<h3>Books</h3>
+@if (response == null)
+{
+    <MudAlert Severity="Severity.Info" NoIcon="true">
+        <MudProgressCircular Size="Size.Small" Color="Color.Default" Indeterminate="true" />
+        Loading data, please wait...
+    </MudAlert>
+}
+else if (!response.Success)
+{
+    <MudAlert Severity="Severity.Error">@response.Message</MudAlert>
+}
+else
+{
+    <div>
+        <MudGrid Spacing="1" Justify="Justify.FlexStart">
+            @foreach (var book in response.Data)
+            {
+                <MudItem xs="12" sm="6" md="4" lg="3">
+                    <MudCard Class="card-min-height">
+                        <MudCardMedia Image="@book.Image" Class="card-img-height img-center" />
+                        @*<MudImage Elevation="1" Alt="@book.Title" Src="@book.Image" Class="card-img-height img-center" Height="258"></MudImage>*@
+                        <MudCardContent>
+                            <MudText Typo="Typo.h5">@book.Title - @book.Price?.ToString("C")</MudText>
+                            <MudAlert Elevation="0" NoIcon="true" Severity="Severity.Normal"> @book.Summary</MudAlert>
+                        </MudCardContent>
+                        <MudCardActions>
+                            <MudIconButton Icon="@Icons.Material.Filled.Favorite" Color="Color.Default" />
+                            <MudIconButton Icon="@Icons.Material.Filled.Share" Color="Color.Default" />
+                            <MudButton Variant="Variant.Text" Color="Color.Primary">Learn More</MudButton>
+                        </MudCardActions>
+                    </MudCard>
+                </MudItem>
+            }
+        </MudGrid>
+    </div>
+}
+
+@code {
+
+}
