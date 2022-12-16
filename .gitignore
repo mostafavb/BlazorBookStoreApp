@@ -365,3 +365,4 @@ FodyWeavers.xsd
 /BookStoreApp.API/logs/log-20221205.txt
 /BookStoreApp.API/logs/log-20221205.txt
 /.gitignore
+/BookStoreApp.API/wwwroot/Files/Images/Books
