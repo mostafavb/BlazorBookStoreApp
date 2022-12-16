@@ -18,7 +18,7 @@ public partial class Create
     List<AuthorDto> authors;
     private string img = string.Empty;
     string uploadFileWarning;
-    double fileSize = 1024 * 1024 * 0.5;
+    double fileSize = 1024 * 1024 * 1;
     protected override async Task OnInitializedAsync()
     {
         Console.WriteLine("The create new book start");

@@ -30,8 +30,6 @@ builder.Services.AddScoped<IClient, Client>();
 builder.Services.AddScoped<IAuthorService, AuthorService>();
 builder.Services.AddScoped<IBookService, BookService>();
 
-//builder.Services.AddHttpClient<IClient, Client>(cl => cl.BaseAddress = new Uri("https://localhost:7036"));
-
 
 builder.Services.AddMudServices();
 

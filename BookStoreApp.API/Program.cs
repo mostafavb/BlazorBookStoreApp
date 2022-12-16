@@ -20,7 +20,23 @@ builder.Host.UseSerilog((ctx,lc)=>
     lc.WriteTo.Console().ReadFrom.Configuration(ctx.Configuration)
 );
 
+
+var _policyName = "GeeksPolicy";
+
+builder.Services.AddCors(opt =>
+{
+    opt.AddPolicy(name: _policyName,
+    policy =>
+    {
+        policy.WithOrigins("https://localhost:44398")            
+            .AllowAnyMethod()
+            .AllowAnyHeader();
+    });
+});
+
 var app = builder.Build();
+
+app.UseCors(_policyName);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

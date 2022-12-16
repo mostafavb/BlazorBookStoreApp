@@ -19,7 +19,7 @@ public partial class Update
     Response<BookUpdateDto> response;
     string uploadFileWarning;
     string img;
-    double fileSize = 1024 * 1024 * 0.5;
+    double fileSize = 1024 * 1024 * 1;
     protected override async Task OnInitializedAsync()
     {
         var authorResponse = await authorService.GetAuthors();
