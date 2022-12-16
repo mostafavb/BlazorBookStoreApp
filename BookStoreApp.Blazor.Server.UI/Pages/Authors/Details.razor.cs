@@ -18,7 +18,10 @@ public partial class Details
         //response = await authorService.GetAuthor(Id);
         response = await authorService.GetAuthorDetails(Id);
         if (response.Success)
+        {
             Author = response.Data;
+            Author.FirstName = $"{response.Data.FirstName} {response.Data.LastName}";
+        }
     }
 
     private void BackToList()

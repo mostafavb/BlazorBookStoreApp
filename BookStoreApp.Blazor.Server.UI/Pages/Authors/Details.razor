@@ -22,8 +22,8 @@ else
                 </CardHeaderContent>
             </MudCardHeader>
             <MudCardContent>
-                <MudTextField Disabled="true" @bind-Value="Author.FirstName" Label="First Name" Variant="Variant.Text" Margin="Margin.Normal"></MudTextField>
-                <MudTextField Disabled="true" @bind-Value="Author.LastName" Label="Last Name" Variant="Variant.Text" Margin="Margin.Normal"></MudTextField>
+                <MudTextField Disabled="true" @bind-Value="Author.FirstName" Label="Author Name" Variant="Variant.Text" Margin="Margin.Normal"></MudTextField>
+                @*<MudTextField Disabled="true" @bind-Value="Author.LastName" Label="Last Name" Variant="Variant.Text" Margin="Margin.Normal"></MudTextField>*@
                 <MudTextField Lines="4" Disabled="true" @bind-Value="Author.Bio" Label="Bio" Variant="Variant.Text" Margin="Margin.Normal"></MudTextField>
                 <br />
                 @if (Author.Books == null || !Author.Books.Any())
@@ -35,8 +35,7 @@ else
                     <Books AuthorId="@Author.Id"/>
                 }
             </MudCardContent>
-        </MudCard>
-       
+        </MudCard>       
     }
 }
 <br />

@@ -2,13 +2,11 @@
     min-height: 500px;
 }
 ::deep .card-img-height {
-    max-width: 200px;
+    max-width: 180px;
     max-height: 250px;
 }
 ::deep .img-center {
    
-    justify-content: center;
-    display: flex;
-    align-items: center;
-    text-align:center;
+    margin-left:auto;
+    margin-right:auto;
 }

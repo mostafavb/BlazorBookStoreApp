@@ -1,0 +1,53 @@
+﻿@page "/books/detail/{id:int}"
+
+@if (response == null)
+{
+    <MudAlert Severity="Severity.Info">
+        <MudProgressCircular Size="Size.Small" Color="Color.Default" Indeterminate="true" />
+        Loading data, please wait...
+    </MudAlert>
+}
+else
+{
+    if (!response.Success)
+    {
+        <MudAlert Severity="Severity.Error">@response.Message</MudAlert>
+    }
+    else
+    {
+        <MudCard Elevation="25">
+            <MudCardHeader>
+                <CardHeaderContent>
+                    <MudText Typo="Typo.h6">Details of Book</MudText>
+                </CardHeaderContent>
+            </MudCardHeader>
+            <MudCardContent>
+                <MudGrid >
+                    <MudItem>
+                        @if (!string.IsNullOrEmpty(book.Image))
+                        {
+                            <MudImage Elevation="4" Src="@book.Image" Height="180" Alt="@book.Title"></MudImage>
+                        }
+                    </MudItem>
+                    <MudItem>
+                        <MudPaper Elevation="0" Class="mt-3 ml-1">
+                            <MudText Typo="Typo.h6">@book.Title </MudText>
+                        </MudPaper>
+                        <MudPaper Elevation="0" Class="mt-5 ml-2">
+                            <MudText Typo="Typo.caption" Color="Color.Error">@book.AuthorName </MudText>
+                        </MudPaper>
+                        <MudPaper Elevation="0" Class="mt-2 ml-2">
+                            <MudText Typo="Typo.body1">@book.Price?.ToString("C") </MudText>
+                        </MudPaper>
+                    </MudItem>
+                </MudGrid>
+                <MudItem md="4" Class="mt-3">
+                    <MudAlert NoIcon="true" Severity="Severity.Normal"> @book.Summary</MudAlert>
+                </MudItem>
+            </MudCardContent>
+        </MudCard>
+    }
+}
+<br />
+<MudButton Variant="Variant.Filled" Color="Color.Success" OnClick="GotToEdit">Edit Book</MudButton>
+<MudButton Variant="Variant.Filled" Color="Color.Surface" OnClick="BackToList">Back to list</MudButton>

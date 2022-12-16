@@ -20,8 +20,13 @@ public class BookUpdateDto:BaseDto
     public string? Summary { get; set; } = string.Empty;
 
     public string? Image { get; set; } = string.Empty;
+    public string ImageData { get; set; }
+    public string OriginalImageName { get; set; }
 
     [Required]
     [Range(0, int.MaxValue)]
     public decimal? Price { get; set; } = 0;
+
+    [Required]
+    public int AuthorId { get; set; }
 }

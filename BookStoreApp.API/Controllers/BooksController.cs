@@ -79,6 +79,36 @@ namespace BookStoreApp.API.Controllers
         }
 
 
+        // GET: api/Books/BookForEdit/5
+        [HttpGet("BookForEdit/{id}")]
+        public async Task<ActionResult<BookUpdateDto>> GetBookForEdit(int id)
+        {
+            if (context.Books == null)
+            {
+                logger.LogWarning("Entity set for 'BookStoreDbContext.Books' is null.");
+                return Problem("Entity set for DbContext is null.");
+            }
+            try
+            {
+                var book = await context.Books
+                    .FirstOrDefaultAsync(f => f.Id == id);
+
+                if (book == null)
+                {
+                    return NotFound();
+                }
+                var bookToUpdate = mapper.Map<BookUpdateDto>(book);
+                return Ok(bookToUpdate);
+
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, $"Error happend in {nameof(GetBook)}");
+                return Problem(Messages.Error500, statusCode: 500);
+            }
+        }
+
+
         // GET: api/Books/5
         [HttpGet("{id}")]
         public async Task<ActionResult<BookDto>> GetBook(int id)
@@ -110,6 +140,8 @@ namespace BookStoreApp.API.Controllers
             }
         }
 
+
+
         // PUT: api/Books/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
@@ -127,6 +159,14 @@ namespace BookStoreApp.API.Controllers
 
             var book = await context.Books.FindAsync(id);
 
+            if (!string.IsNullOrEmpty(bookDto.ImageData))
+                bookDto.Image = CreateImage(bookDto.ImageData, bookDto.OriginalImageName);
+
+            if (!string.IsNullOrEmpty(book.Image) && book.Image.ToLower() != bookDto.Image.ToLower())
+                DeleteImage(book.Image);
+            
+                
+            
             mapper.Map(bookDto, book);
 
             context.Entry(book).State = EntityState.Modified;
@@ -150,6 +190,22 @@ namespace BookStoreApp.API.Controllers
             }
 
             return NoContent();
+        }
+
+        private void DeleteImage(string bookImagePath)
+        {
+            try
+            {
+                var imageName = Path.GetFileName(bookImagePath);
+                var path = $"{webHost.WebRootPath}\\Files\\Images\\Books\\{imageName}";
+                if (System.IO.File.Exists(path))
+                    System.IO.File.Delete(path);
+            }
+            catch (Exception ex)
+            {
+
+                logger.LogError(ex, $"Error occurd when file {bookImagePath} was deleting");
+            }            
         }
 
         // POST: api/Books

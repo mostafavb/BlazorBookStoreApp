@@ -3,50 +3,53 @@ using BookStoreApp.Blazor.Server.UI.Services.Book;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using MudBlazor;
-using System.Globalization;
+using System.Reflection;
 
 namespace BookStoreApp.Blazor.Server.UI.Pages.Books;
 
-public partial class Create
+public partial class Update
 {
-    public CultureInfo _en = CultureInfo.GetCultureInfo("en-US");
-    BookCreateDto model;
-    private Response<int> result;
+    [Parameter] public int Id { get; set; }
     [Inject] IBookService bookService { get; set; }
     [Inject] IAuthorService authorService { get; set; }
-    [Inject] ISnackbar Snackbar { get; set; }
     [Inject] NavigationManager navigationManager { get; set; }
+    [Inject] ISnackbar Snackbar { get; set; }
+
     List<AuthorDto> authors;
-    private string img = string.Empty;
+    //private BookDto book;
+    private BookUpdateDto model;
+    Response<BookUpdateDto> response;
     string uploadFileWarning;
+    string img;
     double fileSize = 1024 * 1024 * 0.5;
     protected override async Task OnInitializedAsync()
     {
-        Console.WriteLine("The create new book start");
-        model = new() { AuthorId = -1 };
-        var response = await authorService.GetAuthors();
+        var authorResponse = await authorService.GetAuthors();
+        if (authorResponse.Success)
+            authors = authorResponse.Data;
+        response = await bookService.GetBookForEdit(Id);
         if (response.Success)
-            authors = response.Data.ToList();
-
+        {
+            model = response.Data;
+            img = response.Data.Image;
+        }
     }
-    private async Task HandelCreatingBook()
+
+    private async Task HandleEditBook()
     {
-        result = await bookService.CreateBook(model);
+        var result = await bookService.EditBook(Id, model);
         if (result.Success)
         {
-            Snackbar.Add("The Book saved successfully.", Severity.Success, config =>
+            Snackbar.Add("The Book saved successfully.", Severity.Success, (config =>
             {
-                config.Action = "Return to the list";
-                config.ActionColor = Color.Transparent;
-                config.Onclick = snackbar =>
-                {
-                    BackToList();
-                    return Task.CompletedTask;
-                };
-            });
-            //toastService.ShowSuccess("The Author saved successfully. Return to the list.", "SUCCESS", (() => BackToList()));
+                config.Action = "Return to the list.";
+                config.Onclick = snak => { BackToList(); return Task.CompletedTask; };
+            }));
         }
-
+        else
+        {
+            Snackbar.Add(result.Message, Severity.Error);
+        }
     }
 
     private async Task HandelFileSelection(InputFileChangeEventArgs e)
@@ -55,11 +58,11 @@ public partial class Create
         var file = e.File;
         if (file != null)
         {
-
             if (file.Size > fileSize)
-                uploadFileWarning = $"Please note that maximum size for file to upload is {fileSize / 1024}KB.";
+                uploadFileWarning = $"Please note that maximum size for file to upload is {fileSize/1024}KB.";
             else
             {
+
                 try
                 {
                     var ext = System.IO.Path.GetExtension(file.Name);
@@ -74,6 +77,7 @@ public partial class Create
 
                         model.ImageData = base64String;
                         model.OriginalImageName = file.Name;
+
                         img = $"data:{imageType}; base64, {base64String}";
 
                         //var resizedImage = await file.RequestImageFileAsync("image/png", 450, 582);
@@ -96,16 +100,15 @@ public partial class Create
             }
         }
     }
-
     private void ClearCash()
     {
         model.OriginalImageName =
-            img =           
+            img =
+            model.Image =
             model.ImageData =
             uploadFileWarning = string.Empty;
     }
-
-    void BackToList()
+    private void BackToList()
     {
         navigationManager.NavigateTo("/books");
     }

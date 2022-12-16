@@ -9,5 +9,6 @@ public interface IBookService
     Task<Response<int>> CreateBook(BookCreateDto book);
     Task<Response<int>> EditBook(int id, BookUpdateDto book);
     Task<Response<BookDto>> GetBook(int id);
+    Task<Response<BookUpdateDto>> GetBookForEdit(int id);
     Task<Response<int>> DeleteBook(int id);
 }

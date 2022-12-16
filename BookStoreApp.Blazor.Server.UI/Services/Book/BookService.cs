@@ -117,6 +117,34 @@ public class BookService : BaseHttpService, IBookService
         return response;
     }
 
+    public async Task<Response<BookUpdateDto>> GetBookForEdit(int id)
+    {
+        Response<BookUpdateDto> response;
+        try
+        {
+            //await Task.Delay(2000);
+            //throw new Exception("Its a big error please call your administrator.");
+            var data = await client.BookForEditAsync(id);
+            response = new Response<BookUpdateDto>()
+            {
+                Data = data,
+                Success = true
+            };
+        }
+        catch (ApiException ex)
+        {
+            response = ConvertApiException<BookUpdateDto>(ex);
+        }
+        catch (Exception ex)
+        {
+            response = new Response<BookUpdateDto>()
+            {
+                Message = ex.Message,
+            };
+        }
+        return response;
+    }
+
     public async Task<Response<List<BookDto>>> GetBooks()
     {
         Response<List<BookDto>> response;

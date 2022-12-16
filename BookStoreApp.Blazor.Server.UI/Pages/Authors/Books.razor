@@ -20,9 +20,10 @@ else
                 <MudItem xs="12" sm="6" md="4" lg="3">
                     <MudCard Class="card-min-height">
                         <MudCardMedia Image="@book.Image" Class="card-img-height img-center" />
+                        @*<MudImage Elevation="1" Alt="@book.Title" Src="@book.Image" Class="card-img-height img-center" Height="258"></MudImage>*@
                         <MudCardContent>
                             <MudText Typo="Typo.h5">@book.Title - @book.Price?.ToString("C")</MudText>
-                            <MudText Typo="Typo.body2">@book.Summary</MudText>
+                            <MudAlert Elevation="0" NoIcon="true" Severity="Severity.Normal"> @book.Summary</MudAlert>
                         </MudCardContent>
                         <MudCardActions>
                             <MudIconButton Icon="@Icons.Material.Filled.Favorite" Color="Color.Default" />

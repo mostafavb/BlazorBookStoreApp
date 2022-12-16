@@ -10,7 +10,7 @@ public static class MudServiceConfiguration
     {
         MudServicesConfiguration config = new MudServicesConfiguration();
 
-        config.SnackbarConfiguration.PositionClass = Defaults.Classes.Position.TopRight;
+        config.SnackbarConfiguration.PositionClass = Defaults.Classes.Position.BottomLeft;
         config.SnackbarConfiguration.PreventDuplicates = false;
         config.SnackbarConfiguration.NewestOnTop = false;
         config.SnackbarConfiguration.ShowCloseIcon = true;

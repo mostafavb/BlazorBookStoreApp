@@ -39,14 +39,15 @@ else
                 @context.Title
             </MudTd>
             <MudTd DataLabel="AuthorName">
-                @context.AuthorName
+                <MudLink Href=@($"/authors/detail/{context.AuthorId}") Typo="Typo.body2">@context.AuthorName</MudLink>
+
             </MudTd>
             <MudTd DataLabel="Price">
                 @context.Price?.ToString("C")
             </MudTd>
             <MudTd DataLabel="Summary">
-                @(context.Summary.Length > 60 ? context.Summary.Substring(0, 60) : context.Summary)...                
-            </MudTd>            
+                @(context.Summary.Length > 60 ? context.Summary.Substring(0, 60) : context.Summary)...
+            </MudTd>
             <MudTd DataLabel="Image">
                 @if (!string.IsNullOrEmpty(context.Image))
                 {
