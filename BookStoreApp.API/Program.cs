@@ -21,22 +21,24 @@ builder.Host.UseSerilog((ctx,lc)=>
 );
 
 
-var _policyName = "GeeksPolicy";
+var corsPolicyName = "AllowAll";
 
 builder.Services.AddCors(opt =>
 {
-    opt.AddPolicy(name: _policyName,
+    opt.AddPolicy(name: corsPolicyName,
     policy =>
     {
-        policy.WithOrigins("https://localhost:44398")            
+        policy
+        //.WithOrigins("https://localhost:44398", "http://localhost:65283/")            
             .AllowAnyMethod()
-            .AllowAnyHeader();
+            .AllowAnyHeader()
+            .AllowAnyOrigin();
     });
 });
 
 var app = builder.Build();
 
-app.UseCors(_policyName);
+app.UseCors(corsPolicyName);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -46,7 +48,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.UseCors(corsPolicyName);
 app.UseStaticFiles();
 
 app.UseAuthorization();
