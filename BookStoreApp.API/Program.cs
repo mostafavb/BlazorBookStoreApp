@@ -3,6 +3,7 @@ global using BookStoreApp.API.Data;
 
 using Serilog;
 using BookStoreApp.API.Configurations;
+using BookStoreApp.API.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +11,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<BookStoreDbContext>();
 builder.Services.AddAutoMapper(typeof(MapperConfig));
+
+builder.Services.AddScoped<IAuthorsRepository, AuthorsRepository>();
+builder.Services.AddScoped<IBooksRepository, BooksRepository>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

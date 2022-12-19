@@ -8,7 +8,6 @@ public partial class Update
     [Parameter] public int Id { get; set; }
     [Inject] IAuthorService authorService { get; set; }
     [Inject] NavigationManager navigationManager { get; set; }
-    //[Inject] IToastService toastService { get; set; }
     [Inject] ISnackbar Snackbar { get; set; }
 
     private AuthorDto Author;
@@ -26,13 +25,20 @@ public partial class Update
         var result = await authorService.EditAuthor(Id, Author);
         if (result.Success)
         {
-            //toastService.ShowSuccess("The Author saved successfully. Click to return to the list.", "SUCCESS", (() => BackToList()));
-            Snackbar.Add("The Author saved successfully. Click to return to the list.", Severity.Success);
+            Snackbar.Add("The Author saved successfully.", Severity.Success, config =>
+            {
+                config.Action = "Return to the list";
+                config.ActionColor = Color.Transparent;
+                config.Onclick = snackbar =>
+                {
+                    BackToList();
+                    return Task.CompletedTask;
+                };
+            });
         }
         else
         {
             Snackbar.Add(result.Message, Severity.Error);
-            //toastService.ShowError(result.Message, "ERROR");
         }
     }
 

@@ -2,6 +2,7 @@
 using AutoMapper.QueryableExtensions;
 using BookStoreApp.API.Dtos.Book;
 using BookStoreApp.API.Models;
+using BookStoreApp.API.Repositories;
 using BookStoreApp.API.Statics;
 using Microsoft.AspNetCore.Mvc;
 using System.Web;
@@ -13,15 +14,15 @@ namespace BookStoreApp.API.Controllers
     [ApiController]
     public class BooksController : ControllerBase
     {
-        private readonly BookStoreDbContext context;
+        private readonly IBooksRepository bookRepository;
 
         private readonly ILogger<BooksController> logger;
         private readonly IMapper mapper;
         private readonly IWebHostEnvironment webHost;
 
-        public BooksController(BookStoreDbContext context, ILogger<BooksController> logger, IMapper mapper, IWebHostEnvironment webHost)
+        public BooksController(IBooksRepository bookRepository, ILogger<BooksController> logger, IMapper mapper, IWebHostEnvironment webHost)
         {
-            this.context = context;
+            this.bookRepository = bookRepository;
             this.logger = logger;
             this.mapper = mapper;
             this.webHost = webHost;
@@ -31,18 +32,9 @@ namespace BookStoreApp.API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<BookDto>>> GetBooks()
         {
-            if (context.Books == null)
-            {
-                logger.LogWarning("Entity set for 'BookStoreDbContext.Books' is null.");
-                return Problem("Entity set for DbContext is null.");
-            }
             try
             {
-                var books = await context.Books
-                    .Include(i => i.Author)
-                    .ProjectTo<BookDto>(mapper.ConfigurationProvider)
-                    .ToListAsync();
-                //var bookDtos = mapper.Map<IEnumerable<BookDto>>(books);
+                var books = await bookRepository.GetBooksWithDetail();
                 return Ok(books);
             }
             catch (Exception ex)
@@ -56,19 +48,9 @@ namespace BookStoreApp.API.Controllers
         [HttpGet("BooksByAuthor/{authorId}")]
         public async Task<ActionResult<IEnumerable<BookDto>>> GetBooksByAuthorId(int authorId)
         {
-            if (context.Books == null)
-            {
-                logger.LogWarning("Entity set for 'BookStoreDbContext.Books' is null.");
-                return Problem("Entity set for DbContext is null.");
-            }
             try
             {
-                var books = await context.Books
-                    .Include(i => i.Author)
-                    .ProjectTo<BookDto>(mapper.ConfigurationProvider)
-                    .Where(w => w.AuthorId == authorId)
-                    .ToListAsync();
-                //var bookDtos = mapper.Map<IEnumerable<BookDto>>(books);
+                var books = await bookRepository.GetBooksWithDetailByAuthorId(authorId);
                 return Ok(books);
             }
             catch (Exception ex)
@@ -83,15 +65,9 @@ namespace BookStoreApp.API.Controllers
         [HttpGet("BookForEdit/{id}")]
         public async Task<ActionResult<BookUpdateDto>> GetBookForEdit(int id)
         {
-            if (context.Books == null)
-            {
-                logger.LogWarning("Entity set for 'BookStoreDbContext.Books' is null.");
-                return Problem("Entity set for DbContext is null.");
-            }
             try
             {
-                var book = await context.Books
-                    .FirstOrDefaultAsync(f => f.Id == id);
+                var book = await bookRepository.GetAsync(id);
 
                 if (book == null)
                 {
@@ -113,23 +89,15 @@ namespace BookStoreApp.API.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<BookDto>> GetBook(int id)
         {
-            if (context.Books == null)
-            {
-                logger.LogWarning("Entity set for 'BookStoreDbContext.Books' is null.");
-                return Problem("Entity set for DbContext is null.");
-            }
             try
             {
-                var book = await context.Books
-                    .Include(i => i.Author)
-                    .ProjectTo<BookDto>(mapper.ConfigurationProvider)
-                    .FirstOrDefaultAsync(f => f.Id == id);
+                var book = await bookRepository.GetAsync(id);
 
                 if (book == null)
                 {
                     return NotFound();
                 }
-
+                var bookDto = mapper.Map<BookDto>(book);
                 return Ok(book);
 
             }
@@ -157,38 +125,82 @@ namespace BookStoreApp.API.Controllers
                 return BadRequest("Something is wrong! check your input data.");
             }
 
-            var book = await context.Books.FindAsync(id);
+            var book = await bookRepository.GetAsync(id);
+            if (book == null)
+            {
+                logger.LogWarning($"Record was not found in {nameof(PutBook)} id {id}");
+                return NotFound("This Id doesn't match any Book!");
+            }
 
             if (!string.IsNullOrEmpty(bookDto.ImageData))
                 bookDto.Image = CreateImage(bookDto.ImageData, bookDto.OriginalImageName);
 
             if (!string.IsNullOrEmpty(book.Image) && book.Image.ToLower() != bookDto.Image.ToLower())
                 DeleteImage(book.Image);
-            
-                
-            
-            mapper.Map(bookDto, book);
 
-            context.Entry(book).State = EntityState.Modified;
+
+            mapper.Map(bookDto, book);
 
             try
             {
-                await context.SaveChangesAsync();
+                await bookRepository.UpdateAsync(book);
             }
-            catch (DbUpdateConcurrencyException ex)
+            catch (Exception ex)
             {
-                if (!BookExists(id))
-                {
-                    logger.LogWarning($"Record was not found in {nameof(PutBook)} id {id}");
-                    return NotFound("This Id doesn't match any Book!");
-                }
-                else
-                {
-                    logger.LogError(ex, $"Error happend in {nameof(PutBook)} id {id} and {bookDto}");
-                    return Problem(Messages.Error500, statusCode: 500);
-                }
+                logger.LogError(ex, $"Error happend in {nameof(PutBook)} id {id} and {bookDto}");
+                return Problem(Messages.Error500, statusCode: 500);
+
             }
 
+            return NoContent();
+        }
+
+        // POST: api/Books
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost]
+        [ProducesDefaultResponseType]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<BookDto>> PostBook(BookCreateDto bookDto)
+        {
+            var book = mapper.Map<Book>(bookDto);
+            if (!string.IsNullOrEmpty(bookDto.ImageData))
+                book.Image = CreateImage(bookDto.ImageData, bookDto.OriginalImageName);
+            try
+            {
+                await bookRepository.AddAsync(book);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, $"Error happend in {nameof(PostBook)}: {bookDto}");
+                return Problem(Messages.Error500, statusCode: 500);
+            }
+            
+            return CreatedAtAction(nameof(GetBook), new { id = book.Id }, book);
+        }
+
+        // DELETE: api/Books/5
+        [HttpDelete("{id}")]
+        [ProducesDefaultResponseType]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> DeleteBook(int id)
+        {
+            if (! await bookRepository.Exists(id))
+            {
+                return NotFound();
+            }
+            try
+            {
+            await bookRepository.DeleteAsync(id);            
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, $"Error happend in {nameof(DeleteBook)} id: {id} ");
+                return Problem(Messages.Error500, statusCode: 500);
+            }
             return NoContent();
         }
 
@@ -203,60 +215,8 @@ namespace BookStoreApp.API.Controllers
             }
             catch (Exception ex)
             {
-
                 logger.LogError(ex, $"Error occurd when file {bookImagePath} was deleting");
-            }            
-        }
-
-        // POST: api/Books
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        [ProducesDefaultResponseType]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<BookDto>> PostBook(BookCreateDto bookDto)
-        {
-            if (context.Books == null)
-            {
-                return Problem("Entity set 'BookStoreDbContext.Books'  is null.");
             }
-
-            var book = mapper.Map<Book>(bookDto);
-            book.Image = CreateImage(bookDto.ImageData, bookDto.OriginalImageName);
-            context.Books.Add(book);
-            await context.SaveChangesAsync();
-
-            return CreatedAtAction(nameof(GetBook), new { id = book.Id }, book);
-        }
-
-        // DELETE: api/Books/5
-        [HttpDelete("{id}")]
-        [ProducesDefaultResponseType]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> DeleteBook(int id)
-        {
-            if (context.Books == null)
-            {
-                return NotFound();
-            }
-            var book = await context.Books.FindAsync(id);
-            if (book == null)
-            {
-                return NotFound();
-            }
-
-            context.Books.Remove(book);
-            await context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        private bool BookExists(int id)
-        {
-            return (context.Books?.Any(e => e.Id == id)).GetValueOrDefault();
         }
 
         private string CreateImage(string imagebase64, string imageName)
